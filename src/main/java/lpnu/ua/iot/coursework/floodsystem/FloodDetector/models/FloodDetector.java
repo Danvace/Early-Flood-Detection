@@ -1,11 +1,9 @@
 package lpnu.ua.iot.coursework.floodsystem.FloodDetector.models;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 public class FloodDetector {
 
@@ -18,8 +16,15 @@ public class FloodDetector {
     private double levelOfWater;
 
     private String gps;
-
+    //    @Pattern("/^\\d{4}\\-(0?[1-9]|1[012])\\-(0?[1-9]|[12][0-9]|3[01])$/gm")
     private String dateOfMeasurement;
+
+    public FloodDetector(String pointOfMeasurement, double levelOfWater, String gps, String dateOfMeasurement) {
+        this.pointOfMeasurement = pointOfMeasurement;
+        this.levelOfWater = levelOfWater;
+        this.gps = gps;
+        this.dateOfMeasurement = dateOfMeasurement;
+    }
 
     String getHeaders() {
         return HEADER;
