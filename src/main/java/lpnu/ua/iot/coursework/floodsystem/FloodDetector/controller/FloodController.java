@@ -1,5 +1,6 @@
 package lpnu.ua.iot.coursework.floodsystem.FloodDetector.controller;
 
+import jakarta.validation.Valid;
 import lpnu.ua.iot.coursework.floodsystem.FloodDetector.models.FloodDetector;
 import lpnu.ua.iot.coursework.floodsystem.FloodDetector.service.FloodService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,12 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @Controller
 @RequestMapping(path = "flood")
 public class FloodController {
-    FloodService floodService;
+    private final FloodService floodService;
 
     @Autowired
     public FloodController(final FloodService floodService) {
@@ -35,13 +37,13 @@ public class FloodController {
     }
 
     @PostMapping
-    public ResponseEntity<FloodDetector> post(@RequestBody final FloodDetector floodDetector) {
+    public ResponseEntity<FloodDetector> post(@Valid @RequestBody final FloodDetector floodDetector) throws IOException {
         floodService.postFlood(floodDetector);
         return ResponseEntity.status(HttpStatus.CREATED).body(floodDetector);
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<FloodDetector> put(@RequestBody final FloodDetector floodDetector, @PathVariable final Integer id) {
+    public ResponseEntity<FloodDetector> put(@Valid @RequestBody final FloodDetector floodDetector, @PathVariable final Integer id) {
         floodService.putFlood(id, floodDetector);
         if (floodService.putFlood(id, floodDetector) == null) {
             return ResponseEntity.notFound().build();
