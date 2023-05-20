@@ -1,9 +1,8 @@
 package lpnu.ua.iot.coursework.floodsystem.FloodDetector.service;
 
 import lombok.Getter;
+import lpnu.ua.iot.coursework.floodsystem.FloodDetector.FileStorage.FloodStorageSystem;
 import lpnu.ua.iot.coursework.floodsystem.FloodDetector.models.FloodDetector;
-import lpnu.ua.iot.coursework.floodsystem.FloodDetector.reader.CSVReader;
-import lpnu.ua.iot.coursework.floodsystem.FloodDetector.writter.FloodWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +10,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 @Getter
@@ -18,13 +18,15 @@ public class FloodService {
 
     private final Map<Integer, FloodDetector> floodDetectorMap = new HashMap<>();
 
-    private Integer nextAvailable = 1;
+    private final FloodStorageSystem floodStorageSystem;
 
-    private final FloodWriter floodWriter;
+    private final AtomicInteger nextAvailable;
+
 
     @Autowired
-    public FloodService(FloodWriter floodWriter, CSVReader csvReader) {
-        this.floodWriter = floodWriter;
+    public FloodService(final FloodStorageSystem floodStorageSystem) throws IOException {
+        this.floodStorageSystem = floodStorageSystem;
+        this.nextAvailable = new AtomicInteger(floodStorageSystem.getLastId());
     }
 
     public Map<Integer, FloodDetector> getMap() {
@@ -40,9 +42,9 @@ public class FloodService {
     }
 
     public void postFlood(final FloodDetector floodDetector) throws IOException {
-        floodDetector.setId(nextAvailable);
-        floodDetectorMap.put(nextAvailable++, floodDetector);
-        floodWriter.writeToCSV(floodDetector);
+        floodDetector.setId(nextAvailable.incrementAndGet());
+        floodDetectorMap.put(floodDetector.getId(), floodDetector);
+        floodStorageSystem.writeToCSV(floodDetector);
     }
 
     public FloodDetector putFlood(final Integer id, final FloodDetector floodDetector) {

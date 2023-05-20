@@ -1,5 +1,7 @@
 package lpnu.ua.iot.coursework.floodsystem.FloodDetector.models;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
@@ -8,11 +10,12 @@ import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@Entity
 public class FloodDetector {
 
     public static final String HEADER = "id, pointOfMeasurement, levelOfWater, gps, dateOfMeasurement";
-
-    private int id;
+    @Id
+    private Integer id;
 
     @NotEmpty(message = "the point of measurement is required")
     private String pointOfMeasurement;
@@ -25,7 +28,6 @@ public class FloodDetector {
 
     @Pattern(regexp = "^\\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$", message = "the date of measurement should be in format yyyy-mm-dd")
     private String dateOfMeasurement;
-
 
     public FloodDetector(String pointOfMeasurement, double levelOfWater, String gps, String dateOfMeasurement) {
         this.pointOfMeasurement = pointOfMeasurement;
