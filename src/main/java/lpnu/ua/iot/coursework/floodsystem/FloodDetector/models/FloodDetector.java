@@ -41,6 +41,6 @@ public class FloodDetector {
     }
 
     public String toCSV() {
-        return id + ", " + pointOfMeasurement + ", " + levelOfWater + ", " + gps + ", " + dateOfMeasurement;
+        return id + ";" + pointOfMeasurement + ";" + levelOfWater + ";" + gps + ";" + dateOfMeasurement;
     }
 }

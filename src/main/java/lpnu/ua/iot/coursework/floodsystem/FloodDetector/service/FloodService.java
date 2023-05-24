@@ -3,6 +3,7 @@ package lpnu.ua.iot.coursework.floodsystem.FloodDetector.service;
 import lombok.Getter;
 import lpnu.ua.iot.coursework.floodsystem.FloodDetector.FileStorage.FloodStorageSystem;
 import lpnu.ua.iot.coursework.floodsystem.FloodDetector.models.FloodDetector;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Getter
 public class FloodService {
 
-    private final Map<Integer, FloodDetector> floodDetectorMap = new HashMap<>();
+    private final Map<Integer, FloodDetector> floodDetectorMap;
 
     private final FloodStorageSystem floodStorageSystem;
 
@@ -24,9 +25,10 @@ public class FloodService {
 
 
     @Autowired
-    public FloodService(final FloodStorageSystem floodStorageSystem) throws IOException {
+    public FloodService(final @NotNull FloodStorageSystem floodStorageSystem) throws IOException {
         this.floodStorageSystem = floodStorageSystem;
         this.nextAvailable = new AtomicInteger(floodStorageSystem.getLastId());
+        this.floodDetectorMap = floodStorageSystem.getFloodsFromCSV();
     }
 
     public Map<Integer, FloodDetector> getMap() {
@@ -41,13 +43,13 @@ public class FloodService {
         return floodDetectorMap.get(id);
     }
 
-    public void postFlood(final FloodDetector floodDetector) throws IOException {
+    public void postFlood(final @NotNull FloodDetector floodDetector) throws IOException {
         floodDetector.setId(nextAvailable.incrementAndGet());
         floodDetectorMap.put(floodDetector.getId(), floodDetector);
         floodStorageSystem.writeToCSV(floodDetector);
     }
 
-    public FloodDetector putFlood(final Integer id, final FloodDetector floodDetector) {
+    public FloodDetector putFlood(final Integer id, final @NotNull FloodDetector floodDetector) {
         floodDetector.setId(id);
         floodDetectorMap.replace(id, floodDetector);
         return floodDetectorMap.replace(id, floodDetector);
