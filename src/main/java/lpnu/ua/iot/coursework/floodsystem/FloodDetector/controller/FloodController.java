@@ -24,8 +24,8 @@ public class FloodController {
     }
 
     @GetMapping
-    public List<FloodDetector> getAll() {
-        return floodService.getAllFloods();
+    public ResponseEntity<List<FloodDetector>> getAll() {
+        return ResponseEntity.ok(floodService.getAllFloods());
     }
 
     @GetMapping(path = "/{id}")

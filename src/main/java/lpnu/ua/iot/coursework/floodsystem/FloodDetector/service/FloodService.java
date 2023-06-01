@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -36,7 +37,7 @@ public class FloodService {
     }
 
     public List<FloodDetector> getAllFloods() {
-        return floodDetectorMap.values().stream().toList();
+        return new LinkedList<>(floodDetectorMap.values());
     }
 
     public FloodDetector getFlood(Integer id) {
