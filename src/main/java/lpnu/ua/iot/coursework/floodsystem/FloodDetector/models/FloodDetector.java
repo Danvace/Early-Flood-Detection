@@ -1,5 +1,6 @@
 package lpnu.ua.iot.coursework.floodsystem.FloodDetector.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.Min;
@@ -35,7 +36,7 @@ public class FloodDetector {
         this.gps = gps;
         this.dateOfMeasurement = dateOfMeasurement;
     }
-
+    @JsonIgnore
     public String getHeaders() {
         return HEADER;
     }
