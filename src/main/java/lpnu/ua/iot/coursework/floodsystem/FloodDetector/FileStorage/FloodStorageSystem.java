@@ -1,5 +1,6 @@
 package lpnu.ua.iot.coursework.floodsystem.FloodDetector.FileStorage;
 
+import lpnu.ua.iot.coursework.floodsystem.FloodDetector.DateGetter.DateGetter;
 import lpnu.ua.iot.coursework.floodsystem.FloodDetector.models.FloodDetector;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
@@ -15,8 +16,7 @@ public class FloodStorageSystem {
     public static final String PATH_TO_FILES = "src/main/resources/floods/";
 
     public Integer getLastId() throws IOException {
-        File directory = new File(PATH_TO_FILES);
-        File[] files = directory.listFiles();
+        File[] files = getListOfFiles();
 
         List<Integer> id_applicants = new ArrayList<>();
 
@@ -25,13 +25,14 @@ public class FloodStorageSystem {
 
                 try (BufferedReader br = new BufferedReader(new FileReader(file))) {
                     String line;
-                    String lastLine = "";
                     while ((line = br.readLine()) != null) {
-                        lastLine = line;
+                        String[] values = line.split(";", 2);
+                        try {
+                            int id_applicant = Integer.parseInt(values[0].trim());
+                            id_applicants.add(id_applicant);
+                        } catch (NumberFormatException e) {
+                        }
                     }
-                    String[] values = lastLine.split(";", 2);
-                    int id_applicant = Integer.parseInt(values[0].trim());
-                    id_applicants.add(id_applicant);
                 }
             }
         }
@@ -43,7 +44,7 @@ public class FloodStorageSystem {
         String fileName = PATH_TO_FILES +
                 floodDetector.getClass().getSimpleName() +
                 "-" +
-                floodDetector.getDateOfMeasurement() +
+                DateGetter.getCurrentDate() +
                 ".csv";
 
         boolean fileExists = Files.exists(Path.of(fileName));
@@ -56,6 +57,40 @@ public class FloodStorageSystem {
 
             writer.write(floodDetector.toCSV());
             writer.newLine();
+        }
+    }
+
+    public void deleteFloodBy(final Integer id) throws IOException {
+        File tempFile = getTempFile(id);
+        if (tempFile == null) {
+            return;
+        }
+        List<String> lines = getLinesToWrite(tempFile, id);
+        String name = tempFile.getName();
+        tempFile.delete();
+        try (var bufferedWriter = new BufferedWriter(new FileWriter(PATH_TO_FILES + name))) {
+            for (String line : lines) {
+                bufferedWriter.write(line);
+                bufferedWriter.newLine();
+            }
+        }
+    }
+
+    public void putFlood(final Integer id, final FloodDetector floodDetector) throws IOException {
+        File tempFile = getTempFile(id);
+        if (tempFile == null) {
+            return;
+        }
+        List<String> lines = getLinesToWrite(tempFile, id);
+        String name = tempFile.getName();
+        tempFile.delete();
+        try (var bufferedWriter = new BufferedWriter(new FileWriter(PATH_TO_FILES + name))) {
+            for (String line : lines) {
+                bufferedWriter.write(line);
+                bufferedWriter.newLine();
+            }
+            bufferedWriter.write(floodDetector.toCSV());
+            bufferedWriter.newLine();
         }
     }
 
@@ -76,6 +111,57 @@ public class FloodStorageSystem {
         }
         return floodDetectorMap;
     }
+
+    public File getTempFile(final Integer id) throws IOException {
+        File[] files = getListOfFiles();
+        return getFileForChanging(files, id);
+    }
+
+    public List<String> getLinesToWrite(final File file, final Integer id) throws IOException {
+        List<String> lines = new ArrayList<>();
+        try (var bufferedReader = new BufferedReader(new FileReader(file))) {
+
+            String header = bufferedReader.readLine();
+            lines.add(header);
+            String currentLine;
+            while ((currentLine = bufferedReader.readLine()) != null) {
+                String[] parts = currentLine.split(";", 2);
+                int curId = Integer.parseInt(parts[0]);
+
+                if (curId == id) {
+                    continue;
+                }
+                lines.add(currentLine);
+            }
+
+        }
+        return lines;
+    }
+
+    public File getFileForChanging(File[] files, final Integer id) throws IOException {
+        File tempFile = null;
+        if (files != null) {
+            for (File file : files) {
+                try (var bufferedReader = new BufferedReader(new FileReader(file))) {
+                    bufferedReader.readLine();
+                    String currentLine;
+                    while ((currentLine = bufferedReader.readLine()) != null) {
+                        String[] parts = currentLine.split(";", 2);
+                        int curId = Integer.parseInt(parts[0]);
+
+                        if (curId == id) {
+                            tempFile = file;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return tempFile;
+    }
+
+
+
 
     private File[] getListOfFiles() {
         File folder = new File(PATH_TO_FILES);

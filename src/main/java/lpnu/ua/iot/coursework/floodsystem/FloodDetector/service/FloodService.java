@@ -49,13 +49,15 @@ public class FloodService {
         floodStorageSystem.writeToCSV(floodDetector);
     }
 
-    public FloodDetector putFlood(final Integer id, final @NotNull FloodDetector floodDetector) {
+    public FloodDetector putFlood(final Integer id, final @NotNull FloodDetector floodDetector) throws IOException {
         floodDetector.setId(id);
         floodDetectorMap.replace(id, floodDetector);
+        floodStorageSystem.putFlood(id,floodDetector);
         return floodDetectorMap.replace(id, floodDetector);
     }
 
-    public void deleteFlood(final Integer id) {
+    public void deleteFlood(final Integer id) throws IOException {
         floodDetectorMap.remove(id);
+        floodStorageSystem.deleteFloodBy(id);
     }
 }
