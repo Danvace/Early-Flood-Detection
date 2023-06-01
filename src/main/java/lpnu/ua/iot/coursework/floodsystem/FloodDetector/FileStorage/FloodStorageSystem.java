@@ -1,11 +1,13 @@
 package lpnu.ua.iot.coursework.floodsystem.FloodDetector.FileStorage;
 
 import lpnu.ua.iot.coursework.floodsystem.FloodDetector.DateGetter.DateGetter;
+import lpnu.ua.iot.coursework.floodsystem.FloodDetector.creator.CreateFlood;
 import lpnu.ua.iot.coursework.floodsystem.FloodDetector.models.FloodDetector;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
@@ -23,7 +25,10 @@ public class FloodStorageSystem {
         if (files != null) {
             for (File file : files) {
 
-                try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                try (BufferedReader br = new BufferedReader(
+                        new InputStreamReader(
+                                new FileInputStream(file), StandardCharsets.UTF_8))) {
+
                     String line;
                     while ((line = br.readLine()) != null) {
                         String[] values = line.split(";", 2);
@@ -31,6 +36,7 @@ public class FloodStorageSystem {
                             int id_applicant = Integer.parseInt(values[0].trim());
                             id_applicants.add(id_applicant);
                         } catch (NumberFormatException e) {
+
                         }
                     }
                 }
@@ -49,7 +55,10 @@ public class FloodStorageSystem {
 
         boolean fileExists = Files.exists(Path.of(fileName));
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
+        try (BufferedWriter writer = new BufferedWriter(
+                new OutputStreamWriter(
+                        new FileOutputStream(fileName, true), StandardCharsets.UTF_8))) {
+
             if (!fileExists) {
                 writer.write(floodDetector.getHeaders());
                 writer.newLine();
@@ -67,12 +76,19 @@ public class FloodStorageSystem {
         }
         List<String> lines = getLinesToWrite(tempFile, id);
         String name = tempFile.getName();
-        tempFile.delete();
-        try (var bufferedWriter = new BufferedWriter(new FileWriter(PATH_TO_FILES + name))) {
-            for (String line : lines) {
-                bufferedWriter.write(line);
-                bufferedWriter.newLine();
+        boolean deletionSuccessful = tempFile.delete();
+        if (deletionSuccessful) {
+
+            try (var bufferedWriter = new BufferedWriter(
+                    new OutputStreamWriter(
+                            new FileOutputStream(PATH_TO_FILES + name), StandardCharsets.UTF_8))) {
+                for (String line : lines) {
+                    bufferedWriter.write(line);
+                    bufferedWriter.newLine();
+                }
             }
+        }else {
+            throw new RuntimeException("File was not deleted");
         }
     }
 
@@ -83,14 +99,20 @@ public class FloodStorageSystem {
         }
         List<String> lines = getLinesToWrite(tempFile, id);
         String name = tempFile.getName();
-        tempFile.delete();
-        try (var bufferedWriter = new BufferedWriter(new FileWriter(PATH_TO_FILES + name))) {
-            for (String line : lines) {
-                bufferedWriter.write(line);
+        boolean deletingSuccessful =  tempFile.delete();
+        if(deletingSuccessful) {
+            try (var bufferedWriter = new BufferedWriter(
+                    new OutputStreamWriter(
+                            new FileOutputStream(PATH_TO_FILES + name), StandardCharsets.UTF_8))) {
+                for (String line : lines) {
+                    bufferedWriter.write(line);
+                    bufferedWriter.newLine();
+                }
+                bufferedWriter.write(floodDetector.toCSV());
                 bufferedWriter.newLine();
             }
-            bufferedWriter.write(floodDetector.toCSV());
-            bufferedWriter.newLine();
+        }else {
+            throw new RuntimeException("File was not deleted");
         }
     }
 
@@ -100,10 +122,13 @@ public class FloodStorageSystem {
         String line;
         if (files != null) {
             for (File file : files) {
-                try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                try (BufferedReader br = new BufferedReader(
+                        new InputStreamReader(
+                                new FileInputStream(file), StandardCharsets.UTF_8))) {
+
                     br.readLine();
                     while ((line = br.readLine()) != null) {
-                        FloodDetector flood = createObjectFromString(line);
+                        FloodDetector flood = CreateFlood.createObjectFromString(line);
                         floodDetectorMap.put(flood.getId(), flood);
                     }
                 }
@@ -119,7 +144,9 @@ public class FloodStorageSystem {
 
     public List<String> getLinesToWrite(final File file, final Integer id) throws IOException {
         List<String> lines = new ArrayList<>();
-        try (var bufferedReader = new BufferedReader(new FileReader(file))) {
+        try (var bufferedReader = new BufferedReader(
+                new InputStreamReader(
+                        new FileInputStream(file), StandardCharsets.UTF_8))) {
 
             String header = bufferedReader.readLine();
             lines.add(header);
@@ -142,7 +169,9 @@ public class FloodStorageSystem {
         File tempFile = null;
         if (files != null) {
             for (File file : files) {
-                try (var bufferedReader = new BufferedReader(new FileReader(file))) {
+                try (var bufferedReader = new BufferedReader(
+                        new InputStreamReader(
+                                new FileInputStream(file), StandardCharsets.UTF_8))) {
                     bufferedReader.readLine();
                     String currentLine;
                     while ((currentLine = bufferedReader.readLine()) != null) {
@@ -160,26 +189,8 @@ public class FloodStorageSystem {
         return tempFile;
     }
 
-
-
-
-    private File[] getListOfFiles() {
+    private File[] getListOfFiles() { // змінити логіку для отримання файлів , які створені в цьому місяці
         File folder = new File(PATH_TO_FILES);
         return folder.listFiles();
-    }
-
-    private @NotNull FloodDetector createObjectFromString(final @NotNull String stringObject) {
-        String[] arrayObject = stringObject.split(";");
-
-        Integer id = Integer.parseInt(arrayObject[0].trim());
-        String pointOfMeasurement = arrayObject[1].trim();
-        double levelOfWater = Double.parseDouble(arrayObject[2].trim());
-        String gps = arrayObject[3];
-        String dateOfMeasurement = arrayObject[4];
-
-        var floodDetector = new FloodDetector(pointOfMeasurement, levelOfWater, gps, dateOfMeasurement);
-        floodDetector.setId(id);
-
-        return floodDetector;
     }
 }
