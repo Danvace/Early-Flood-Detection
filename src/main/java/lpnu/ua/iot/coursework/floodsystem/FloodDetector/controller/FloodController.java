@@ -40,7 +40,7 @@ public class FloodController {
     @PostMapping
     public ResponseEntity<FloodDetector> post(@Valid @RequestBody final FloodDetector floodDetector, Errors errors) throws IOException {
         if (errors.hasErrors()) {
-            return ResponseEntity.badRequest().body((FloodDetector) errors);
+            return ResponseEntity.badRequest().build();
         }
         floodService.postFlood(floodDetector);
         return ResponseEntity.status(HttpStatus.CREATED).body(floodDetector);
