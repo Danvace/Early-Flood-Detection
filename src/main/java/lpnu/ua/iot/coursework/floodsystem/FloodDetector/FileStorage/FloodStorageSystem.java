@@ -1,8 +1,7 @@
 package lpnu.ua.iot.coursework.floodsystem.FloodDetector.FileStorage;
 
-import lpnu.ua.iot.coursework.floodsystem.FloodDetector.DateGetter.DateGetter;
-import lpnu.ua.iot.coursework.floodsystem.FloodDetector.creator.CreateFlood;
 import lpnu.ua.iot.coursework.floodsystem.FloodDetector.models.FloodDetector;
+import lpnu.ua.iot.coursework.floodsystem.FloodDetector.utility.FloodUtility;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
@@ -52,7 +51,7 @@ public class FloodStorageSystem {
         String fileName = PATH_TO_FILES +
                 floodDetector.getClass().getSimpleName() +
                 "-" +
-                DateGetter.getCurrentDate() +
+                FloodUtility.getCurrentDate() +
                 ".csv";
 
         boolean fileExists = Files.exists(Path.of(fileName));
@@ -130,7 +129,7 @@ public class FloodStorageSystem {
 
                     br.readLine();
                     while ((line = br.readLine()) != null) {
-                        FloodDetector flood = CreateFlood.createObjectFromString(line);
+                        FloodDetector flood = FloodUtility.createObjectFromString(line);
                         floodDetectorMap.put(flood.getId(), flood);
                     }
                 }

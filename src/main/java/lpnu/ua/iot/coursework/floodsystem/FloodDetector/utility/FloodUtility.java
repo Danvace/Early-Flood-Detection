@@ -1,9 +1,12 @@
-package lpnu.ua.iot.coursework.floodsystem.FloodDetector.creator;
+package lpnu.ua.iot.coursework.floodsystem.FloodDetector.utility;
 
 import lpnu.ua.iot.coursework.floodsystem.FloodDetector.models.FloodDetector;
 import org.jetbrains.annotations.NotNull;
 
-public class CreateFlood {
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
+public class FloodUtility {
     public static @NotNull FloodDetector createObjectFromString(final @NotNull String stringObject) {
         String[] arrayObject = stringObject.split(";");
 
@@ -17,5 +20,11 @@ public class CreateFlood {
         floodDetector.setId(id);
 
         return floodDetector;
+    }
+
+    public static String getCurrentDate() {
+        LocalDate currentDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return currentDate.format(formatter);
     }
 }

@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 public class FloodDetector {
 
     public static final String HEADER = "id, pointOfMeasurement, levelOfWater, gps, dateOfMeasurement";
+
     @Id
     private Integer id;
 
