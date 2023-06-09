@@ -10,6 +10,8 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.*;
 
 @Component
@@ -189,8 +191,28 @@ public class FloodStorageSystem {
         return tempFile;
     }
 
-    private File[] getListOfFiles() { // змінити логіку для отримання файлів , які створені в цьому місяці
+    private File[] getListOfFiles() {
         File folder = new File(PATH_TO_FILES);
-        return folder.listFiles();
+        LocalDate currentDate = LocalDate.now();
+        YearMonth currentYearMonth = YearMonth.from(currentDate);
+
+        File[] allFiles = folder.listFiles();
+        if (allFiles == null) {
+            return null;
+        }
+
+        return Arrays.stream(allFiles)
+                .filter(file -> {
+                    String fileName = file.getName();
+                    if (fileName.matches("FloodDetector-\\d{4}-\\d{2}-\\d{2}\\.csv")) {
+                        String fileDateStr = fileName.substring(14, 24);
+                        LocalDate fileDate = LocalDate.parse(fileDateStr);
+                        YearMonth fileYearMonth = YearMonth.from(fileDate);
+                        return fileYearMonth.equals(currentYearMonth);
+                    }
+                    return false;
+                })
+                .toArray(File[]::new);
     }
+
 }
