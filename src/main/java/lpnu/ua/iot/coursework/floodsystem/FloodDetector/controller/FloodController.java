@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -23,8 +24,8 @@ public class FloodController {
     }
 
     @GetMapping
-    public List<FloodDetector> getAll() {
-        return floodService.getAllFloods();
+    public ResponseEntity<List<FloodDetector>> getAll() {
+        return ResponseEntity.ok(floodService.getAllFloods());
     }
 
     @GetMapping(path = "/{id}")
@@ -37,13 +38,16 @@ public class FloodController {
     }
 
     @PostMapping
-    public ResponseEntity<FloodDetector> post(@Valid @RequestBody final FloodDetector floodDetector) throws IOException {
+    public ResponseEntity<FloodDetector> post(@Valid @RequestBody final FloodDetector floodDetector, Errors errors) throws IOException {
+        if (errors.hasErrors()) {
+            return ResponseEntity.badRequest().build();
+        }
         floodService.postFlood(floodDetector);
         return ResponseEntity.status(HttpStatus.CREATED).body(floodDetector);
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<FloodDetector> put(@Valid @RequestBody final FloodDetector floodDetector, @PathVariable final Integer id) {
+    public ResponseEntity<FloodDetector> put(@Valid @RequestBody final FloodDetector floodDetector, @PathVariable final Integer id) throws IOException {
         floodService.putFlood(id, floodDetector);
         if (floodService.putFlood(id, floodDetector) == null) {
             return ResponseEntity.notFound().build();
@@ -52,7 +56,7 @@ public class FloodController {
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<FloodDetector> delete(@PathVariable final Integer id) {
+    public ResponseEntity<FloodDetector> delete(@PathVariable final Integer id) throws IOException {
         if (!floodService.getMap().containsKey(id)) {
             return ResponseEntity.notFound().build();
         }

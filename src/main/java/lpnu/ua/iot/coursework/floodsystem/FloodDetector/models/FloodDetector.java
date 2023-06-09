@@ -1,5 +1,6 @@
 package lpnu.ua.iot.coursework.floodsystem.FloodDetector.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.Min;
@@ -14,6 +15,7 @@ import lombok.NoArgsConstructor;
 public class FloodDetector {
 
     public static final String HEADER = "id, pointOfMeasurement, levelOfWater, gps, dateOfMeasurement";
+
     @Id
     private Integer id;
 
@@ -35,12 +37,12 @@ public class FloodDetector {
         this.gps = gps;
         this.dateOfMeasurement = dateOfMeasurement;
     }
-
+    @JsonIgnore
     public String getHeaders() {
         return HEADER;
     }
 
     public String toCSV() {
-        return id + ", " + pointOfMeasurement + ", " + levelOfWater + ", " + gps + ", " + dateOfMeasurement;
+        return id + ";" + pointOfMeasurement + ";" + levelOfWater + ";" + gps + ";" + dateOfMeasurement;
     }
 }
