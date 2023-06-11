@@ -28,8 +28,8 @@ public class FloodService {
     @Autowired
     public FloodService(final @NotNull FloodStorageSystem floodStorageSystem) throws IOException {
         this.floodStorageSystem = floodStorageSystem;
-        this.nextAvailable = new AtomicInteger(floodStorageSystem.getLastId());
-        this.floodDetectorMap = floodStorageSystem.getFloodsFromCSV();
+        this.nextAvailable = new AtomicInteger(floodStorageSystem.getLastId(FloodStorageSystem.PATH_TO_FILES));
+        this.floodDetectorMap = floodStorageSystem.getFloodsFromCSV(FloodStorageSystem.PATH_TO_FILES);
     }
 
     public Map<Integer, FloodDetector> getMap() {
@@ -47,18 +47,18 @@ public class FloodService {
     public void postFlood(final @NotNull FloodDetector floodDetector) throws IOException {
         floodDetector.setId(nextAvailable.incrementAndGet());
         floodDetectorMap.put(floodDetector.getId(), floodDetector);
-        floodStorageSystem.writeToCSV(floodDetector);
+        floodStorageSystem.writeToCSV(floodDetector,FloodStorageSystem.PATH_TO_FILES);
     }
 
     public FloodDetector putFlood(final Integer id, final @NotNull FloodDetector floodDetector) throws IOException {
         floodDetector.setId(id);
         floodDetectorMap.replace(id, floodDetector);
-        floodStorageSystem.putFlood(id,floodDetector);
+        floodStorageSystem.putFlood(id,floodDetector, FloodStorageSystem.PATH_TO_FILES);
         return floodDetectorMap.replace(id, floodDetector);
     }
 
     public void deleteFlood(final Integer id) throws IOException {
         floodDetectorMap.remove(id);
-        floodStorageSystem.deleteFloodBy(id);
+        floodStorageSystem.deleteFloodBy(id, FloodStorageSystem.PATH_TO_FILES);
     }
 }
