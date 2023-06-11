@@ -18,8 +18,8 @@ public class FloodStorageSystem {
 
     public static final String PATH_TO_FILES = "src/main/resources/floods/";
 
-    public Integer getLastId() throws IOException {
-        File[] files = getListOfFiles();
+    public Integer getLastId(String pathToFile) throws IOException {
+        File[] files = getListOfFiles(pathToFile);
 
         List<Integer> id_applicants = new ArrayList<>();
 
@@ -47,8 +47,8 @@ public class FloodStorageSystem {
         return id_applicants.isEmpty() ? 0 : Collections.max(id_applicants);
     }
 
-    public void writeToCSV(final @NotNull FloodDetector floodDetector) throws IOException {
-        String fileName = PATH_TO_FILES +
+    public void writeToCSV(final @NotNull FloodDetector floodDetector, final String pathToFile) throws IOException {
+        String fileName = pathToFile +
                 floodDetector.getClass().getSimpleName() +
                 "-" +
                 FloodUtility.getCurrentDate() +
@@ -70,8 +70,8 @@ public class FloodStorageSystem {
         }
     }
 
-    public void deleteFloodBy(final Integer id) throws IOException {
-        File tempFile = getTempFile(id);
+    public void deleteFloodBy(final Integer id,final String pathToFile) throws IOException {
+        File tempFile = getTempFile(id,pathToFile);
         if (tempFile == null) {
             return;
         }
@@ -82,7 +82,7 @@ public class FloodStorageSystem {
 
             try (var bufferedWriter = new BufferedWriter(
                     new OutputStreamWriter(
-                            new FileOutputStream(PATH_TO_FILES + name), StandardCharsets.UTF_8))) {
+                            new FileOutputStream(pathToFile + name), StandardCharsets.UTF_8))) {
                 for (String line : lines) {
                     bufferedWriter.write(line);
                     bufferedWriter.newLine();
@@ -93,8 +93,8 @@ public class FloodStorageSystem {
         }
     }
 
-    public void putFlood(final Integer id, final FloodDetector floodDetector) throws IOException {
-        File tempFile = getTempFile(id);
+    public void putFlood(final Integer id, final FloodDetector floodDetector,final String pathToFile) throws IOException {
+        File tempFile = getTempFile(id,pathToFile);
         if (tempFile == null) {
             return;
         }
@@ -104,7 +104,7 @@ public class FloodStorageSystem {
         if(deletingSuccessful) {
             try (var bufferedWriter = new BufferedWriter(
                     new OutputStreamWriter(
-                            new FileOutputStream(PATH_TO_FILES + name), StandardCharsets.UTF_8))) {
+                            new FileOutputStream(pathToFile + name), StandardCharsets.UTF_8))) {
                 for (String line : lines) {
                     bufferedWriter.write(line);
                     bufferedWriter.newLine();
@@ -117,8 +117,8 @@ public class FloodStorageSystem {
         }
     }
 
-    public Map<Integer, FloodDetector> getFloodsFromCSV() throws IOException {
-        File[] files = getListOfFiles();
+    public Map<Integer, FloodDetector> getFloodsFromCSV(String pathToFile) throws IOException {
+        File[] files = getListOfFiles(pathToFile);
         Map<Integer, FloodDetector> floodDetectorMap = new HashMap<>();
         String line;
         if (files != null) {
@@ -138,8 +138,8 @@ public class FloodStorageSystem {
         return floodDetectorMap;
     }
 
-    public File getTempFile(final Integer id) throws IOException {
-        File[] files = getListOfFiles();
+    public File getTempFile(final Integer id, final String pathToFile) throws IOException {
+        File[] files = getListOfFiles(pathToFile);
         return getFileForChanging(files, id);
     }
 
@@ -190,8 +190,8 @@ public class FloodStorageSystem {
         return tempFile;
     }
 
-    private File[] getListOfFiles() {
-        File folder = new File(PATH_TO_FILES);
+    private File[] getListOfFiles(String pathToFile) {
+        File folder = new File(pathToFile);
         LocalDate currentDate = LocalDate.now();
         YearMonth currentYearMonth = YearMonth.from(currentDate);
 
