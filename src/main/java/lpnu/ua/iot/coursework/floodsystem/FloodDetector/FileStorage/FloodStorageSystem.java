@@ -37,7 +37,7 @@ public class FloodStorageSystem {
                             int id_applicant = Integer.parseInt(values[0].trim());
                             id_applicants.add(id_applicant);
                         } catch (NumberFormatException e) {
-
+                            System.out.println("problem with parsing");
                         }
                     }
                 }
