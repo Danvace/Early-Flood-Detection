@@ -3,6 +3,7 @@ package lpnu.ua.iot.coursework.floodsystem.FloodDetector.FileStorage;
 import lpnu.ua.iot.coursework.floodsystem.FloodDetector.FloodUtils;
 import lpnu.ua.iot.coursework.floodsystem.FloodDetector.models.FloodDetector;
 import lpnu.ua.iot.coursework.floodsystem.FloodDetector.utility.FloodUtility;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,6 +34,11 @@ class FloodStorageSystemTest {
     void setUp() throws IOException {
         FloodUtils.deleteFiles();
 
+    }
+
+    @AfterAll
+    public static void tearDown() throws IOException {
+        FloodUtils.deleteFiles();
     }
 
     @Test
