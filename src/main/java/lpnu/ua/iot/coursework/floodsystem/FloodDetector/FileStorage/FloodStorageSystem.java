@@ -14,14 +14,14 @@ import java.time.YearMonth;
 import java.util.*;
 
 @Component
-public class FloodStorageSystem {
+public final class FloodStorageSystem {
 
     public static final String PATH_TO_FILES = "src/main/resources/floods/";
 
-    public Integer getLastId(String pathToFile) throws IOException {
+    public Integer getLastId(final String pathToFile) throws IOException {
         File[] files = getListOfFiles(pathToFile);
 
-        List<Integer> id_applicants = new ArrayList<>();
+        List<Integer> idApplicants = new ArrayList<>();
 
         if (files != null) {
             for (File file : files) {
@@ -31,11 +31,12 @@ public class FloodStorageSystem {
                                 new FileInputStream(file), StandardCharsets.UTF_8))) {
 
                     String line;
+                    br.readLine();
                     while ((line = br.readLine()) != null) {
                         String[] values = line.split(";", 2);
                         try {
-                            int id_applicant = Integer.parseInt(values[0].trim());
-                            id_applicants.add(id_applicant);
+                            int idApplicant = Integer.parseInt(values[0].trim());
+                            idApplicants.add(idApplicant);
                         } catch (NumberFormatException e) {
                             System.out.println("problem with parsing");
                         }
@@ -44,15 +45,11 @@ public class FloodStorageSystem {
             }
         }
 
-        return id_applicants.isEmpty() ? 0 : Collections.max(id_applicants);
+        return idApplicants.isEmpty() ? 0 : Collections.max(idApplicants);
     }
 
     public void writeToCSV(final @NotNull FloodDetector floodDetector, final String pathToFile) throws IOException {
-        String fileName = pathToFile +
-                floodDetector.getClass().getSimpleName() +
-                "-" +
-                FloodUtility.getCurrentDate() +
-                ".csv";
+        String fileName = pathToFile + floodDetector.getClass().getSimpleName() + "-" + FloodUtility.getCurrentDate() + ".csv";
 
         boolean fileExists = Files.exists(Path.of(fileName));
 
@@ -70,8 +67,8 @@ public class FloodStorageSystem {
         }
     }
 
-    public void deleteFloodBy(final Integer id,final String pathToFile) throws IOException {
-        File tempFile = getTempFile(id,pathToFile);
+    public void deleteFloodBy(final Integer id, final String pathToFile) throws IOException {
+        File tempFile = getTempFile(id, pathToFile);
         if (tempFile == null) {
             return;
         }
@@ -88,20 +85,20 @@ public class FloodStorageSystem {
                     bufferedWriter.newLine();
                 }
             }
-        }else {
+        } else {
             throw new RuntimeException("File was not deleted");
         }
     }
 
-    public void putFlood(final Integer id, final FloodDetector floodDetector,final String pathToFile) throws IOException {
-        File tempFile = getTempFile(id,pathToFile);
+    public void putFlood(final Integer id, final FloodDetector floodDetector, final String pathToFile) throws IOException {
+        File tempFile = getTempFile(id, pathToFile);
         if (tempFile == null) {
             return;
         }
         List<String> lines = getLinesToWrite(tempFile, id);
         String name = tempFile.getName();
-        boolean deletingSuccessful =  tempFile.delete();
-        if(deletingSuccessful) {
+        boolean deletingSuccessful = tempFile.delete();
+        if (deletingSuccessful) {
             try (var bufferedWriter = new BufferedWriter(
                     new OutputStreamWriter(
                             new FileOutputStream(pathToFile + name), StandardCharsets.UTF_8))) {
@@ -112,12 +109,12 @@ public class FloodStorageSystem {
                 bufferedWriter.write(floodDetector.toCSV());
                 bufferedWriter.newLine();
             }
-        }else {
+        } else {
             throw new RuntimeException("File was not deleted");
         }
     }
 
-    public Map<Integer, FloodDetector> getFloodsFromCSV(String pathToFile) throws IOException {
+    public Map<Integer, FloodDetector> getFloodsFromCSV(final String pathToFile) throws IOException {
         File[] files = getListOfFiles(pathToFile);
         Map<Integer, FloodDetector> floodDetectorMap = new HashMap<>();
         String line;
@@ -166,7 +163,7 @@ public class FloodStorageSystem {
         return lines;
     }
 
-    public File getFileForChanging(File[] files, final Integer id) throws IOException {
+    public File getFileForChanging(final File[] files, final Integer id) throws IOException {
         File tempFile = null;
         if (files != null) {
             for (File file : files) {
@@ -190,7 +187,7 @@ public class FloodStorageSystem {
         return tempFile;
     }
 
-    private File[] getListOfFiles(String pathToFile) {
+    private File[] getListOfFiles(final String pathToFile) {
         File folder = new File(pathToFile);
         LocalDate currentDate = LocalDate.now();
         YearMonth currentYearMonth = YearMonth.from(currentDate);
@@ -200,18 +197,19 @@ public class FloodStorageSystem {
             return null;
         }
 
-        return Arrays.stream(allFiles)
-                .filter(file -> {
-                    String fileName = file.getName();
-                    if (fileName.matches("FloodDetector-\\d{4}-\\d{2}-\\d{2}\\.csv")) {
-                        String fileDateStr = fileName.substring(14, 24);
-                        LocalDate fileDate = LocalDate.parse(fileDateStr);
-                        YearMonth fileYearMonth = YearMonth.from(fileDate);
-                        return fileYearMonth.equals(currentYearMonth);
-                    }
-                    return false;
-                })
-                .toArray(File[]::new);
+        int startPosition = 14;
+        int endPosition = 24;
+
+        return Arrays.stream(allFiles).filter(file -> {
+            String fileName = file.getName();
+            if (fileName.matches("FloodDetector-\\d{4}-\\d{2}-\\d{2}\\.csv")) {
+                String fileDateStr = fileName.substring(startPosition, endPosition);
+                LocalDate fileDate = LocalDate.parse(fileDateStr);
+                YearMonth fileYearMonth = YearMonth.from(fileDate);
+                return fileYearMonth.equals(currentYearMonth);
+            }
+            return false;
+        }).toArray(File[]::new);
     }
 
 }

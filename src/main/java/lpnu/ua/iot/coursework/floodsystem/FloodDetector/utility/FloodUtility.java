@@ -1,13 +1,12 @@
 package lpnu.ua.iot.coursework.floodsystem.FloodDetector.utility;
 
 import lpnu.ua.iot.coursework.floodsystem.FloodDetector.models.FloodDetector;
-import org.jetbrains.annotations.NotNull;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class FloodUtility {
-    public static @NotNull FloodDetector createObjectFromString(final @NotNull String stringObject) {
+    public static FloodDetector createObjectFromString(final String stringObject) {
         String[] arrayObject = stringObject.split(";");
 
         Integer id = Integer.parseInt(arrayObject[0].trim());

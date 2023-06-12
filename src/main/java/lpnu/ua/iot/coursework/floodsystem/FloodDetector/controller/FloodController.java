@@ -15,7 +15,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping(path = "flood")
-public class FloodController {
+public final class FloodController {
     private final FloodService floodService;
 
     @Autowired
@@ -38,7 +38,8 @@ public class FloodController {
     }
 
     @PostMapping
-    public ResponseEntity<FloodDetector> post(@Valid @RequestBody final FloodDetector floodDetector, Errors errors) throws IOException {
+    public ResponseEntity<FloodDetector> post(@Valid @RequestBody final FloodDetector floodDetector,
+                                              final Errors errors) throws IOException {
         if (errors.hasErrors()) {
             return ResponseEntity.badRequest().build();
         }
@@ -47,7 +48,8 @@ public class FloodController {
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<FloodDetector> put(@Valid @RequestBody final FloodDetector floodDetector, @PathVariable final Integer id) throws IOException {
+    public ResponseEntity<FloodDetector> put(@Valid @RequestBody final FloodDetector floodDetector,
+                                             @PathVariable final Integer id) throws IOException {
         floodService.putFlood(id, floodDetector);
         if (floodService.putFlood(id, floodDetector) == null) {
             return ResponseEntity.notFound().build();
