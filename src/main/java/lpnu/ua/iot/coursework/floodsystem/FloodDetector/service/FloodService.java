@@ -40,20 +40,20 @@ public class FloodService {
         return new LinkedList<>(floodDetectorMap.values());
     }
 
-    public FloodDetector getFlood(Integer id) {
+    public FloodDetector getFlood(final Integer id) {
         return floodDetectorMap.get(id);
     }
 
     public void postFlood(final @NotNull FloodDetector floodDetector) throws IOException {
         floodDetector.setId(nextAvailable.incrementAndGet());
         floodDetectorMap.put(floodDetector.getId(), floodDetector);
-        floodStorageSystem.writeToCSV(floodDetector,FloodStorageSystem.PATH_TO_FILES);
+        floodStorageSystem.writeToCSV(floodDetector, FloodStorageSystem.PATH_TO_FILES);
     }
 
     public FloodDetector putFlood(final Integer id, final @NotNull FloodDetector floodDetector) throws IOException {
         floodDetector.setId(id);
         floodDetectorMap.replace(id, floodDetector);
-        floodStorageSystem.putFlood(id,floodDetector, FloodStorageSystem.PATH_TO_FILES);
+        floodStorageSystem.putFlood(id, floodDetector, FloodStorageSystem.PATH_TO_FILES);
         return floodDetectorMap.replace(id, floodDetector);
     }
 
