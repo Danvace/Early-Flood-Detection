@@ -135,12 +135,12 @@ public final class FloodStorageSystem {
         return floodDetectorMap;
     }
 
-    public File getTempFile(final Integer id, final String pathToFile) throws IOException {
+    private File getTempFile(final Integer id, final String pathToFile) throws IOException {
         File[] files = getListOfFiles(pathToFile);
         return getFileForChanging(files, id);
     }
 
-    public List<String> getLinesToWrite(final File file, final Integer id) throws IOException {
+    private List<String> getLinesToWrite(final File file, final Integer id) throws IOException {
         List<String> lines = new ArrayList<>();
         try (var bufferedReader = new BufferedReader(
                 new InputStreamReader(
@@ -163,7 +163,7 @@ public final class FloodStorageSystem {
         return lines;
     }
 
-    public File getFileForChanging(final File[] files, final Integer id) throws IOException {
+    private File getFileForChanging(final File[] files, final Integer id) throws IOException {
         File tempFile = null;
         if (files != null) {
             for (File file : files) {
