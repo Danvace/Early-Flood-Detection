@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net" modified="2023-06-12T18:19:53.545Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36" etag="0cw3yXOWn6fnlwg4GEfa" version="21.3.8" type="github">
+<mxfile host="app.diagrams.net" modified="2023-06-13T08:31:54.098Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36" etag="s8lIsfNPzOjBn17eJp63" version="21.3.8" type="github">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
-    <mxGraphModel dx="1865" dy="506" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="2021" dy="616" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
@@ -127,16 +127,16 @@
         <mxCell id="4nNSMMMOvfkwLF6aNkUw-18" value="+ getFloodsFromCSV(pathToFile : String) :&amp;nbsp;Map&amp;lt;Integer, FloodDetector&amp;gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;spacingLeft=4;spacingRight=4;" parent="4nNSMMMOvfkwLF6aNkUw-14" vertex="1">
           <mxGeometry y="176" width="460" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="4nNSMMMOvfkwLF6aNkUw-23" value="+ getTempFile(id : Integer, pathToFile : String) : File" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;spacingLeft=4;spacingRight=4;" parent="4nNSMMMOvfkwLF6aNkUw-14" vertex="1">
+        <mxCell id="4nNSMMMOvfkwLF6aNkUw-23" value="- getTempFile(id : Integer, pathToFile : String) : File" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;spacingLeft=4;spacingRight=4;" parent="4nNSMMMOvfkwLF6aNkUw-14" vertex="1">
           <mxGeometry y="206" width="460" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="4nNSMMMOvfkwLF6aNkUw-24" value="+ getLinesToWrite(file : File, id : Integer) : List&amp;lt;String&amp;gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;spacingLeft=4;spacingRight=4;" parent="4nNSMMMOvfkwLF6aNkUw-14" vertex="1">
+        <mxCell id="4nNSMMMOvfkwLF6aNkUw-24" value="- getLinesToWrite(file : File, id : Integer) : List&amp;lt;String&amp;gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;spacingLeft=4;spacingRight=4;" parent="4nNSMMMOvfkwLF6aNkUw-14" vertex="1">
           <mxGeometry y="236" width="460" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="4nNSMMMOvfkwLF6aNkUw-22" value="+ getFileForChanging(files : File[], id : Integer) : File" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;spacingLeft=4;spacingRight=4;" parent="4nNSMMMOvfkwLF6aNkUw-14" vertex="1">
+        <mxCell id="4nNSMMMOvfkwLF6aNkUw-22" value="- getFileForChanging(files : File[], id : Integer) : File" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;spacingLeft=4;spacingRight=4;" parent="4nNSMMMOvfkwLF6aNkUw-14" vertex="1">
           <mxGeometry y="266" width="460" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="4nNSMMMOvfkwLF6aNkUw-25" value="+ getListOfFiles(pathToFile : String) : File[]" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;spacingLeft=4;spacingRight=4;" parent="4nNSMMMOvfkwLF6aNkUw-14" vertex="1">
+        <mxCell id="4nNSMMMOvfkwLF6aNkUw-25" value="- getListOfFiles(pathToFile : String) : File[]" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;spacingLeft=4;spacingRight=4;" parent="4nNSMMMOvfkwLF6aNkUw-14" vertex="1">
           <mxGeometry y="296" width="460" height="30" as="geometry" />
         </mxCell>
         <mxCell id="4nNSMMMOvfkwLF6aNkUw-26" value="Use" style="endArrow=open;endSize=12;dashed=1;html=1;rounded=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;exitX=1;exitY=0.75;exitDx=0;exitDy=0;" parent="WIyWlLk6GJQsqaUBKTNV-1" source="4nNSMMMOvfkwLF6aNkUw-3" target="4nNSMMMOvfkwLF6aNkUw-19" edge="1">
